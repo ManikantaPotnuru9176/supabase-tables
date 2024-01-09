@@ -6,6 +6,7 @@ const Table = () => {
   const table = useMetadataStore((store) => store.table);
   const addColumn = useMetadataStore((store) => store.addColumn);
   const deleteColumn = useMetadataStore((store) => store.deleteColumn);
+  const updateColumn = useMetadataStore((store) => store.updateColumn);
 
   console.log("table: ", table.schema);
 
@@ -56,13 +57,11 @@ const Table = () => {
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       >
                         <option selected>Type</option>
-                        <option value="CA">California</option>
-                        <option value="TX">Texas</option>
-                        <option value="WH">Washinghton</option>
-                        <option value="FL">Florida</option>
-                        <option value="VG">Virginia</option>
-                        <option value="GE">Georgia</option>
-                        <option value="MI">Michigan</option>
+                        <option value="string">string</option>
+                        <option value="boolean">boolean</option>
+                        <option value="integer">integer</option>
+                        <option value="rte">rte</option>
+                        <option value="date">date</option>
                       </select>
                     </div>
                   </td>
