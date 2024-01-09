@@ -2,10 +2,22 @@
 import React from "react";
 import Table from "./Table";
 import Image from "next/image";
+import useMetadataStore from "../_zustand/metadata";
 
 const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
+  const table = useMetadataStore((store) => store.table);
+  const updateTable = useMetadataStore((store) => store.updateTable);
+
   const closeSidebar = () => {
     setOpen(false);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateTable({ name: e.target.value });
+  };
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateTable({ description: e.target.value });
   };
 
   return (
@@ -42,6 +54,8 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
           <input
             type="text"
             id="name"
+            value={table.name}
+            onChange={handleNameChange}
             placeholder=""
             className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
             required
@@ -57,6 +71,8 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
           <input
             type="text"
             id="description"
+            value={table.description}
+            onChange={handleDescriptionChange}
             placeholder="optional"
             className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
           />

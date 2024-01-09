@@ -4,6 +4,8 @@ interface Column {
   columnId: number;
   name: string;
   type: string;
+  defaultValue: string;
+  primary: boolean;
 }
 
 interface Table {
@@ -30,7 +32,9 @@ const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
       tableId: "",
       name: "",
       description: "",
-      schema: [{ columnId: 1, name: "", type: "" }],
+      schema: [
+        { columnId: 1, name: "", type: "", defaultValue: "", primary: false },
+      ],
     },
   };
 
@@ -43,7 +47,7 @@ const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
             : 1;
         const updatedSchema = [
           ...state.table.schema,
-          { id: nextId, ...column } as Column,
+          { columnId: nextId, ...column } as Column,
         ];
         return { ...state, table: { ...state.table, schema: updatedSchema } };
       });
