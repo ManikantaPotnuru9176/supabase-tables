@@ -12,7 +12,7 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
     <div
       className={`${
         open ? "" : "hidden"
-      } fixed top-0 bottom-0 lg:right-0 p-2 w-[700px] bg-gray-900 overflow-y-auto`}
+      } fixed top-0 bottom-0 lg:right-0 p-2 pt-0 w-[700px] bg-gray-900 overflow-y-auto`}
     >
       <div className="p-3 mt-2 flex items-center bg-gray-900 text-gray-100 text-xl sticky top-0">
         <Image

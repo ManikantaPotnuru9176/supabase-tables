@@ -1,15 +1,13 @@
 import React, { useState } from "react";
+import useMetadataStore from "../_zustand/metadata";
+import { table } from "console";
 
 const Table = () => {
-  const [columns, setColumns] = useState(1);
+  const table = useMetadataStore((store) => store.table);
+  const addColumn = useMetadataStore((store) => store.addColumn);
+  const deleteColumn = useMetadataStore((store) => store.deleteColumn);
 
-  const addColumn = () => {
-    setColumns((prev) => prev + 1);
-  };
-
-  const deleteColumn = () => {
-    setColumns((prev) => prev - 1);
-  };
+  console.log("table: ", table.schema);
 
   return (
     <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -38,62 +36,63 @@ const Table = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.from({ length: columns }, (_, index) => index + 1).map(
-              (_, index) => {
-                return (
-                  <tr key={index} className="border-b dark:border-gray-700">
-                    <td
-                      scope="row"
-                      className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
+            {table.schema.map((column, index) => {
+              return (
+                <tr key={index} className="border-b dark:border-gray-700">
+                  <td
+                    scope="row"
+                    className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    <input
+                      type="text"
+                      id="name"
+                      className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
+                    />
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex w-24">
+                      <select
+                        id="states"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                        <option selected>Type</option>
+                        <option value="CA">California</option>
+                        <option value="TX">Texas</option>
+                        <option value="WH">Washinghton</option>
+                        <option value="FL">Florida</option>
+                        <option value="VG">Virginia</option>
+                        <option value="GE">Georgia</option>
+                        <option value="MI">Michigan</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <input
+                      type="text"
+                      id="name"
+                      placeholder="optional"
+                      className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
+                    />
+                  </td>
+                  <td className="px-4 py-3">
+                    <label className="relative inline-flex items-center cursor-pointer">
                       <input
-                        type="text"
-                        id="name"
-                        className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
                       />
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex w-24">
-                        <select
-                          id="states"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
-                          <option selected>Type</option>
-                          <option value="CA">California</option>
-                          <option value="TX">Texas</option>
-                          <option value="WH">Washinghton</option>
-                          <option value="FL">Florida</option>
-                          <option value="VG">Virginia</option>
-                          <option value="GE">Georgia</option>
-                          <option value="MI">Michigan</option>
-                        </select>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <input
-                        type="text"
-                        id="name"
-                        placeholder="optional"
-                        className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
-                      />
-                    </td>
-                    <td className="px-4 py-3">
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value=""
-                          className="sr-only peer"
-                        />
-                        <div className="w-11 h-6 peer-focus:outline-none rounded-full peer bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border-gray-600 peer-checked:bg-blue-600"></div>
-                      </label>
-                    </td>
-                    <td className="px-4 py-3">
-                      <i className="bi bi-x text-xl" onClick={deleteColumn}></i>
-                    </td>
-                  </tr>
-                );
-              }
-            )}
+                      <div className="w-11 h-6 peer-focus:outline-none rounded-full peer bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border-gray-600 peer-checked:bg-blue-600"></div>
+                    </label>
+                  </td>
+                  <td className="px-4 py-3">
+                    <i
+                      className="bi bi-x text-xl"
+                      onClick={() => deleteColumn(column.columnId)}
+                    ></i>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -101,7 +100,7 @@ const Table = () => {
         <button
           type="button"
           className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-1 mb-4 mt-4 bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-600"
-          onClick={addColumn}
+          onClick={() => addColumn({ name: "", type: "" })}
         >
           Add column
         </button>
