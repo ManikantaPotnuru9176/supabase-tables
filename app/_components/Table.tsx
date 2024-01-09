@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 
 const Table = () => {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [columns, setColumns] = useState(1);
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
+  const addColumn = () => {
+    setColumns((prev) => prev + 1);
+  };
+
+  const deleteColumn = () => {
+    setColumns((prev) => prev - 1);
   };
 
   return (
@@ -34,142 +38,73 @@ const Table = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b dark:border-gray-700">
-              <th
-                scope="row"
-                className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Apple iMac 27&#34;
-              </th>
-              <td className="px-4 py-3">PC</td>
-              <td className="px-4 py-3">Apple</td>
-              <td className="px-4 py-3">300</td>
-              <td className="px-4 py-3 flex items-center justify-end">
-                <button
-                  id="apple-imac-27-dropdown-button"
-                  data-dropdown-toggle="apple-imac-27-dropdown"
-                  className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                  type="button"
-                  onClick={toggleDropdown}
-                >
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                  </svg>
-                </button>
-                <div
-                  id="apple-imac-27-dropdown"
-                  className={`${
-                    isDropdownOpen ? "block" : "hidden"
-                  } z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600`}
-                >
-                  <ul
-                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="apple-imac-27-dropdown-button"
-                  >
-                    <li>
-                      <a
-                        href="#"
-                        className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Show
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Edit
-                      </a>
-                    </li>
-                  </ul>
-                  <div className="py-1">
-                    <a
-                      href="#"
-                      className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+            {Array.from({ length: columns }, (_, index) => index + 1).map(
+              (_, index) => {
+                return (
+                  <tr key={index} className="border-b dark:border-gray-700">
+                    <td
+                      scope="row"
+                      className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      Delete
-                    </a>
-                  </div>
-                </div>
-              </td>
-              <td className="px-4 py-3">$2999</td>
-            </tr>
-            <tr className="border-b dark:border-gray-700">
-              <th
-                scope="row"
-                className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Apple iMac 27&#34;
-              </th>
-              <td className="px-4 py-3">PC</td>
-              <td className="px-4 py-3">Apple</td>
-              <td className="px-4 py-3">300</td>
-              <td className="px-4 py-3 flex items-center justify-end">
-                <button
-                  id="apple-imac-27-dropdown-button"
-                  data-dropdown-toggle="apple-imac-27-dropdown"
-                  className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                  type="button"
-                  onClick={toggleDropdown}
-                >
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                  </svg>
-                </button>
-                <div
-                  id="apple-imac-27-dropdown"
-                  className={`${
-                    isDropdownOpen ? "block" : "hidden"
-                  } z-50 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600`}
-                >
-                  <ul
-                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="apple-imac-27-dropdown-button"
-                  >
-                    <li>
-                      <a
-                        href="#"
-                        className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Show
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Edit
-                      </a>
-                    </li>
-                  </ul>
-                  <div className="py-1">
-                    <a
-                      href="#"
-                      className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Delete
-                    </a>
-                  </div>
-                </div>
-              </td>
-              <td className="px-4 py-3">$2999</td>
-            </tr>
+                      <input
+                        type="text"
+                        id="name"
+                        className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex w-24">
+                        <select
+                          id="states"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
+                          <option selected>Type</option>
+                          <option value="CA">California</option>
+                          <option value="TX">Texas</option>
+                          <option value="WH">Washinghton</option>
+                          <option value="FL">Florida</option>
+                          <option value="VG">Virginia</option>
+                          <option value="GE">Georgia</option>
+                          <option value="MI">Michigan</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <input
+                        type="text"
+                        id="name"
+                        placeholder="optional"
+                        className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          value=""
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 peer-focus:outline-none rounded-full peer bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border-gray-600 peer-checked:bg-blue-600"></div>
+                      </label>
+                    </td>
+                    <td className="px-4 py-3">
+                      <i className="bi bi-x text-xl" onClick={deleteColumn}></i>
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-center">
+        <button
+          type="button"
+          className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-1 mb-4 mt-4 bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-600"
+          onClick={addColumn}
+        >
+          Add column
+        </button>
       </div>
     </div>
   );
