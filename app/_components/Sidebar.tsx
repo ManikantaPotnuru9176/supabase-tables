@@ -33,13 +33,11 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   };
 
   const insertMutation = useMutation({
-    mutationKey: ["insertMetaData", table.table_id],
     mutationFn: (newTableData: { table_id: number; schema: string }) =>
       insertData("metadata", newTableData),
   });
 
   const createColumnMutation = useMutation({
-    mutationKey: ["createColumn"],
     mutationFn: (data: object) => createColumn(data),
     onError: () => {
       alert("Error creating column.");
@@ -47,7 +45,6 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   });
 
   const createTableMutation = useMutation({
-    mutationKey: ["createTable"],
     mutationFn: (data: object) => createTable(data),
     onSuccess: (data: { data: object; id: number } | undefined) => {
       if (data) {
@@ -69,7 +66,6 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   });
 
   const createMetadataColumnMutation = useMutation({
-    mutationKey: ["createMetadataColumn"],
     mutationFn: (data: object) => createColumn(data),
     onError: () => {
       alert("Error creating metadata column.");
@@ -77,9 +73,8 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   });
 
   const createMetadataTableMutation = useMutation({
-    mutationKey: ["createMetadataTable"],
     mutationFn: (data: object) => createTable(data),
-    onSuccess: (data: { data: object; id: number } | undefined) => {
+    onSuccess: async (data: { data: object; id: number } | undefined) => {
       if (data) {
         const columnsData = [
           {
@@ -108,9 +103,18 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
           },
         ];
 
-        columnsData.map((column) =>
-          createMetadataColumnMutation.mutate(column)
-        );
+        columnsData.map((column) => {
+          createMetadataColumnMutation.mutate(column, {
+            onSuccess: async () => {
+              setTimeout(() => {
+                insertMutation.mutate({
+                  table_id: data.id,
+                  schema: JSON.stringify(table.schema),
+                });
+              }, 1000);
+            },
+          });
+        });
       }
     },
     onError: () => {
