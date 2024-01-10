@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Table from "./Table";
 import Image from "next/image";
 
@@ -10,14 +10,30 @@ import { createColumn } from "@/supabase/createColumn";
 import { typeConverter } from "@/utils/typeConverter";
 import { insertData } from "../_supabase/insert";
 
+interface ColumnMutationParams {
+  tableId: number;
+  name: string;
+  type: string;
+  isUnique: boolean;
+  isPrimaryKey: boolean;
+  defaultValue?: string;
+  isIdentity: boolean;
+  defaultValueFormat?: string;
+  isNullable?: boolean;
+}
+
 const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const table = useMetadataStore((store) => store.table);
   const updateTable = useMetadataStore((store) => store.updateTable);
+  const resetTableData = useMetadataStore((store) => store.resetTable);
 
   console.log("table: ", table);
 
   const closeSidebar = () => {
     setOpen(false);
+    resetTableData();
   };
 
   const updateTableId = (tableId: number) => {
@@ -49,15 +65,29 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
     onSuccess: (data: { data: object; id: number } | undefined) => {
       if (data) {
         updateTableId(data.id);
-        table.schema.map((column) =>
-          createColumnMutation.mutate({
+        table.schema.map((column) => {
+          const mutationParams: ColumnMutationParams = {
             tableId: data.id,
             name: column.name,
             type: typeConverter(column.type),
             isUnique: false,
             isPrimaryKey: column.primary,
-          })
-        );
+            isIdentity: false,
+          };
+
+          if (column.column_id === 1) {
+            mutationParams.isIdentity = true;
+          } else if (column.column_id === 2) {
+            mutationParams.defaultValueFormat = "expression";
+            mutationParams.defaultValue = column.default_value;
+            mutationParams.isNullable = false;
+          } else {
+            mutationParams.defaultValue = column.default_value;
+            mutationParams.isNullable = true;
+          }
+
+          createColumnMutation.mutate(mutationParams);
+        });
       }
     },
     onError: () => {
@@ -111,6 +141,7 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
                   table_id: data.id,
                   schema: JSON.stringify(table.schema),
                 });
+                setIsLoading(false);
               }, 1000);
             },
           });
@@ -124,6 +155,7 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     createTableMutation.mutate({
       name: table.name,
       schema: "public",
@@ -214,8 +246,30 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
             </button>
             <button
               type="submit"
-              className="focus:outline-none text-white font-medium rounded-lg text-sm px-8 py-2.5 bg-green-600 hover:bg-green-700"
+              className="focus:outline-none text-white font-medium rounded-lg text-sm px-8 py-2.5 bg-green-600 hover:bg-green-700 flex"
             >
+              {isLoading && (
+                <svg
+                  className="w-5 h-5 mr-2 text-white animate-spin"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              )}
               Create
             </button>
           </div>

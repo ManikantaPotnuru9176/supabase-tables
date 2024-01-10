@@ -24,6 +24,7 @@ interface MetadataActions {
   deleteColumn: (columnId: number) => void;
   updateTable: (updatedTable: Partial<Table>) => void;
   updateColumn: (columnId: number, updatedColumn: Partial<Column>) => void;
+  resetTable: () => void;
 }
 
 const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
@@ -33,7 +34,27 @@ const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
       name: "",
       description: "",
       schema: [
-        { column_id: 1, name: "", type: "", default_value: "", primary: false },
+        {
+          column_id: 1,
+          name: "id",
+          type: "bigInteger",
+          default_value: "",
+          primary: true,
+        },
+        {
+          column_id: 2,
+          name: "created_at",
+          type: "timestamptz",
+          default_value: "now()",
+          primary: false,
+        },
+        {
+          column_id: 3,
+          name: "",
+          type: "",
+          default_value: "",
+          primary: false,
+        },
       ],
     },
   };
@@ -82,6 +103,39 @@ const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
               ? { ...column, ...updatedColumn }
               : column
           ),
+        },
+      }));
+    },
+
+    resetTable: () => {
+      set(() => ({
+        table: {
+          table_id: null,
+          name: "",
+          description: "",
+          schema: [
+            {
+              column_id: 1,
+              name: "id",
+              type: "bigInteger",
+              default_value: "",
+              primary: true,
+            },
+            {
+              column_id: 2,
+              name: "created_at",
+              type: "timestamptz",
+              default_value: "now()",
+              primary: false,
+            },
+            {
+              column_id: 3,
+              name: "",
+              type: "",
+              default_value: "",
+              primary: false,
+            },
+          ],
         },
       }));
     },

@@ -10,6 +10,10 @@ export const typeConverter = (type: string): string => {
       return "varchar";
     case "date":
       return "date";
+    case "bigInterger":
+      return "int8";
+    case "timestamptz":
+      return "timestamptz";
     default:
       throw new Error(`Unsupported type: ${type}`);
   }

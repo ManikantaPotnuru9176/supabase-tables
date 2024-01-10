@@ -78,7 +78,7 @@ const Table = () => {
                         onChange={(e) =>
                           handleTypeChange(column.column_id, e.target.value)
                         }
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pl-0 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       >
                         <option value="" disabled>
                           Type
@@ -86,8 +86,10 @@ const Table = () => {
                         <option value="string">string</option>
                         <option value="boolean">boolean</option>
                         <option value="integer">integer</option>
+                        <option value="bigInterger">bigInterger</option>
                         <option value="rte">rte</option>
                         <option value="date">date</option>
+                        <option value="timestamptz">timestamptz</option>
                       </select>
                     </div>
                   </td>
@@ -103,7 +105,9 @@ const Table = () => {
                         )
                       }
                       placeholder="optional"
-                      className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
+                      className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+                      disabled={index === 0}
+                      readOnly={index === 1}
                     />
                   </td>
                   <td className="px-4 py-3">
@@ -118,10 +122,12 @@ const Table = () => {
                     </label>
                   </td>
                   <td className="px-4 py-3">
-                    <i
-                      className="bi bi-x text-xl cursor-pointer"
-                      onClick={() => deleteColumn(column.column_id)}
-                    ></i>
+                    {index !== 0 && index !== 1 && (
+                      <i
+                        className="bi bi-x text-xl cursor-pointer"
+                        onClick={() => deleteColumn(column.column_id)}
+                      ></i>
+                    )}
                   </td>
                 </tr>
               );
