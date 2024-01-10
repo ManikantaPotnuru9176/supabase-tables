@@ -2,22 +2,25 @@
 import React from "react";
 import Table from "./Table";
 import Image from "next/image";
-import useMetadataStore from "../_zustand/metadata";
+
+import useMetadataStore from "@/zustand/metadata";
 import { useMutation } from "@tanstack/react-query";
-import { createTable } from "../_supabase/createTable";
-import { createColumn } from "../_supabase/createColumn";
-import { typeConverter } from "../_utils/typeConverter";
+import { createTable } from "@/supabase/createTable";
+import { createColumn } from "@/supabase/createColumn";
+import { typeConverter } from "@/utils/typeConverter";
 
 const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   const table = useMetadataStore((store) => store.table);
   const updateTable = useMetadataStore((store) => store.updateTable);
 
+  console.log("table: ", table);
+
   const closeSidebar = () => {
     setOpen(false);
   };
 
-  const updateTableId = (tableId: string) => {
-    updateTable({ tableId });
+  const updateTableId = (tableId: number) => {
+    updateTable({ table_id: tableId });
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +34,9 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   const createColumnMutation = useMutation({
     mutationKey: ["createColumn"],
     mutationFn: (data: object) => createColumn(data),
-    onSuccess: (data: { data: object; id: string } | undefined) => {},
+    onSuccess: (data: { data: object } | undefined) => {
+      console.log("Colum Data on success: ", data);
+    },
     onError: () => {
       alert("Error creating table.");
     },
@@ -40,12 +45,12 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   const createTableMutation = useMutation({
     mutationKey: ["createTable"],
     mutationFn: (data: object) => createTable(data),
-    onSuccess: (data: { data: object; id: string } | undefined) => {
+    onSuccess: (data: { data: object; id: number } | undefined) => {
       if (data) {
         updateTableId(data.id);
         table.schema.map((column) =>
           createColumnMutation.mutate({
-            tableId: table.tableId,
+            tableId: data.id,
             name: column.name,
             type: typeConverter(column.type),
             isUnique: false,

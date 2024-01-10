@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from "axios";
 
 export const createColumn = async (
   payload: object
-): Promise<{ data: object; id: string } | undefined> => {
+): Promise<{ data: object } | undefined> => {
   try {
     const response: AxiosResponse<any> = await axios({
       method: "post",

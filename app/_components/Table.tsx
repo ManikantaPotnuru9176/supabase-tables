@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import useMetadataStore from "../_zustand/metadata";
-import { table } from "console";
+import React from "react";
+
+import useMetadataStore from "@/zustand/metadata";
 
 const Table = () => {
   const table = useMetadataStore((store) => store.table);
@@ -18,12 +18,12 @@ const Table = () => {
 
   const handleToggleChange = (id: number) => {
     updateColumn(id, {
-      primary: !table.schema.find((column) => column.columnId === id)?.primary,
+      primary: !table.schema.find((column) => column.column_id === id)?.primary,
     });
   };
 
   const handleDefaultValueChange = (id: number, newDefaultValue: string) => {
-    updateColumn(id, { defaultValue: newDefaultValue });
+    updateColumn(id, { default_value: newDefaultValue });
   };
 
   return (
@@ -65,7 +65,7 @@ const Table = () => {
                       id="name"
                       value={column.name}
                       onChange={(e) =>
-                        handleNameChange(column.columnId, e.target.value)
+                        handleNameChange(column.column_id, e.target.value)
                       }
                       className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-400 placeholder-gray-400 text-white focus:outline-none"
                     />
@@ -76,7 +76,7 @@ const Table = () => {
                         id="states"
                         value={column.type}
                         onChange={(e) =>
-                          handleTypeChange(column.columnId, e.target.value)
+                          handleTypeChange(column.column_id, e.target.value)
                         }
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md border-s-gray-100 dark:border-s-gray-700 border-s-2 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       >
@@ -95,10 +95,10 @@ const Table = () => {
                     <input
                       type="text"
                       id="defaultValue"
-                      value={column.defaultValue}
+                      value={column.default_value}
                       onChange={(e) =>
                         handleDefaultValueChange(
-                          column.columnId,
+                          column.column_id,
                           e.target.value
                         )
                       }
@@ -111,7 +111,7 @@ const Table = () => {
                       <input
                         type="checkbox"
                         checked={column.primary}
-                        onChange={() => handleToggleChange(column.columnId)}
+                        onChange={() => handleToggleChange(column.column_id)}
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 peer-focus:outline-none rounded-full peer bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all border-gray-600 peer-checked:bg-blue-600"></div>
@@ -120,7 +120,7 @@ const Table = () => {
                   <td className="px-4 py-3">
                     <i
                       className="bi bi-x text-xl cursor-pointer"
-                      onClick={() => deleteColumn(column.columnId)}
+                      onClick={() => deleteColumn(column.column_id)}
                     ></i>
                   </td>
                 </tr>
@@ -134,7 +134,7 @@ const Table = () => {
           type="button"
           className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-1 mb-4 mt-4 bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-600"
           onClick={() =>
-            addColumn({ name: "", type: "", defaultValue: "", primary: false })
+            addColumn({ name: "", type: "", default_value: "", primary: false })
           }
         >
           Add column

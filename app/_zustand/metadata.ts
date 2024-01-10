@@ -1,15 +1,15 @@
 import { create } from "zustand";
 
 interface Column {
-  columnId: number;
+  column_id: number;
   name: string;
   type: string;
-  defaultValue: string;
+  default_value: string;
   primary: boolean;
 }
 
 interface Table {
-  tableId: string;
+  table_id: number | null;
   name: string;
   description: string;
   schema: Column[];
@@ -29,11 +29,11 @@ interface MetadataActions {
 const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
   const initialState: MetadataState = {
     table: {
-      tableId: "",
+      table_id: null,
       name: "",
       description: "",
       schema: [
-        { columnId: 1, name: "", type: "", defaultValue: "", primary: false },
+        { column_id: 1, name: "", type: "", default_value: "", primary: false },
       ],
     },
   };
@@ -43,7 +43,7 @@ const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
       set((state) => {
         const nextId =
           state.table.schema.length > 0
-            ? state.table.schema[state.table.schema.length - 1].columnId + 1
+            ? state.table.schema[state.table.schema.length - 1].column_id + 1
             : 1;
         const updatedSchema = [
           ...state.table.schema,
@@ -58,7 +58,7 @@ const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
         table: {
           ...state.table,
           schema: state.table.schema.filter(
-            (column) => column.columnId !== columnId
+            (column) => column.column_id !== columnId
           ),
         },
       }));
@@ -78,7 +78,7 @@ const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
         table: {
           ...state.table,
           schema: state.table.schema.map((column) =>
-            column.columnId === columnId
+            column.column_id === columnId
               ? { ...column, ...updatedColumn }
               : column
           ),
