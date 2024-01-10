@@ -8,7 +8,7 @@ export const createColumn = async (
   try {
     const response: AxiosResponse<any> = await axios({
       method: "post",
-      url: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/columns`,
+      url: `${process.env.NEXT_PUBLIC_SUPABASE_STUDIO_URL}/columns`,
       data: JSON.stringify(payload),
       headers: {
         "Content-Type": "application/json",

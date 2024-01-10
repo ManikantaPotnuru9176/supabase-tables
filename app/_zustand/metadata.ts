@@ -47,7 +47,7 @@ const useMetadataStore = create<MetadataState & MetadataActions>((set) => {
             : 1;
         const updatedSchema = [
           ...state.table.schema,
-          { columnId: nextId, ...column } as Column,
+          { column_id: nextId, ...column } as Column,
         ];
         return { ...state, table: { ...state.table, schema: updatedSchema } };
       });

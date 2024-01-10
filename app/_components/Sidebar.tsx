@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createTable } from "@/supabase/createTable";
 import { createColumn } from "@/supabase/createColumn";
 import { typeConverter } from "@/utils/typeConverter";
+import { insertData } from "../_supabase/insert";
 
 const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   const table = useMetadataStore((store) => store.table);
@@ -31,14 +32,16 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
     updateTable({ description: e.target.value });
   };
 
+  const insertMutation = useMutation({
+    mutationFn: (newTableData: { table_id: number; schema: string }) =>
+      insertData("metadata", newTableData),
+  });
+
   const createColumnMutation = useMutation({
     mutationKey: ["createColumn"],
     mutationFn: (data: object) => createColumn(data),
-    onSuccess: (data: { data: object } | undefined) => {
-      console.log("Colum Data on success: ", data);
-    },
     onError: () => {
-      alert("Error creating table.");
+      alert("Error creating column.");
     },
   });
 
@@ -57,10 +60,64 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
             isPrimaryKey: column.primary,
           })
         );
+        insertMutation.mutate({
+          table_id: data.id,
+          schema: JSON.stringify(table.schema),
+        });
       }
     },
     onError: () => {
       alert("Error creating table.");
+    },
+  });
+
+  const createMetadataColumnMutation = useMutation({
+    mutationKey: ["createColumn"],
+    mutationFn: (data: object) => createColumn(data),
+    onError: () => {
+      alert("Error creating metadata column.");
+    },
+  });
+
+  const createMetadataTableMutation = useMutation({
+    mutationKey: ["createMetadataTable"],
+    mutationFn: (data: object) => createTable(data),
+    onSuccess: (data: { data: object; id: number } | undefined) => {
+      if (data) {
+        const columnsData = [
+          {
+            tableId: data.id,
+            name: "id",
+            type: "int8",
+            isIdentity: true,
+            isUnique: true,
+            isPrimaryKey: true,
+          },
+          {
+            tableId: data.id,
+            name: "table_id",
+            type: typeConverter("integer"),
+            isIdentity: false,
+            isUnique: false,
+            isPrimaryKey: false,
+          },
+          {
+            tableId: data.id,
+            name: "schema",
+            type: typeConverter("string"),
+            isIdentity: false,
+            isUnique: false,
+            isPrimaryKey: false,
+          },
+        ];
+
+        columnsData.map((column) =>
+          createMetadataColumnMutation.mutate(column)
+        );
+      }
+    },
+    onError: () => {
+      alert("Error creating metadata table.");
     },
   });
 
@@ -70,6 +127,12 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
       name: table.name,
       schema: "public",
       comment: table.description,
+      rls_enabled: false,
+    });
+    createMetadataTableMutation.mutate({
+      name: "metadata",
+      schema: "public",
+      comment: "It is a metadata of the tables",
       rls_enabled: false,
     });
   };

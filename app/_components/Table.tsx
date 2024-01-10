@@ -134,7 +134,12 @@ const Table = () => {
           type="button"
           className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-1 mb-4 mt-4 bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-600"
           onClick={() =>
-            addColumn({ name: "", type: "", default_value: "", primary: false })
+            addColumn({
+              name: "",
+              type: "",
+              default_value: "",
+              primary: false,
+            })
           }
         >
           Add column

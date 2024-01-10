@@ -8,7 +8,7 @@ export const createTable = async (
   try {
     const response: AxiosResponse<any> = await axios({
       method: "post",
-      url: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/tables`,
+      url: `${process.env.NEXT_PUBLIC_SUPABASE_STUDIO_URL}/tables`,
       data: JSON.stringify(payload),
       headers: {
         "Content-Type": "application/json",
