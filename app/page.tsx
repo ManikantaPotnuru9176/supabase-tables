@@ -1,18 +1,9 @@
-"use client";
-import { useState } from "react";
-import Sidebar from "./_components/Sidebar";
+import Main from "./_components/Main";
 
 export default function Home() {
-  const [open, setOpen] = useState(false);
-
-  const openSidebar = () => {
-    setOpen(true);
-  };
-
   return (
     <div>
-      <button onClick={openSidebar}>Create Table</button>
-      <Sidebar open={open} setOpen={setOpen} />
+      <Main />
     </div>
   );
 }
