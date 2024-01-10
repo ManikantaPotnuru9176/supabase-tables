@@ -5,6 +5,8 @@ import Image from "next/image";
 import useMetadataStore from "../_zustand/metadata";
 import { useMutation } from "@tanstack/react-query";
 import { createTable } from "../_supabase/createTable";
+import { createColumn } from "../_supabase/createColumn";
+import { typeConverter } from "../_utils/typeConverter";
 
 const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   const table = useMetadataStore((store) => store.table);
@@ -26,13 +28,30 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
     updateTable({ description: e.target.value });
   };
 
+  const createColumnMutation = useMutation({
+    mutationKey: ["createColumn"],
+    mutationFn: (data: object) => createColumn(data),
+    onSuccess: (data: { data: object; id: string } | undefined) => {},
+    onError: () => {
+      alert("Error creating table.");
+    },
+  });
+
   const createTableMutation = useMutation({
     mutationKey: ["createTable"],
     mutationFn: (data: object) => createTable(data),
     onSuccess: (data: { data: object; id: string } | undefined) => {
       if (data) {
-        console.log("createTableData: ", data);
         updateTableId(data.id);
+        table.schema.map((column) =>
+          createColumnMutation.mutate({
+            tableId: table.tableId,
+            name: column.name,
+            type: typeConverter(column.type),
+            isUnique: false,
+            isPrimaryKey: column.primary,
+          })
+        );
       }
     },
     onError: () => {

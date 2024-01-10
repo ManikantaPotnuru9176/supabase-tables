@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { ReactQueryProvider } from "@/app/_utils/ReactQueryProvider";
+import { ReactQueryProvider } from "@/app/_providers/ReactQueryProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
