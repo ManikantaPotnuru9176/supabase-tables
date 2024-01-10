@@ -10,6 +10,6 @@ export const insertData = async (tableName: string, newData: object) => {
 
     return data;
   } catch (error) {
-    console.error("Error creating data:", error);
+    console.error("Error inserting data:", error);
   }
 };

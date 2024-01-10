@@ -33,6 +33,7 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   };
 
   const insertMutation = useMutation({
+    mutationKey: ["insertMetaData", table.table_id],
     mutationFn: (newTableData: { table_id: number; schema: string }) =>
       insertData("metadata", newTableData),
   });
@@ -60,10 +61,6 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
             isPrimaryKey: column.primary,
           })
         );
-        insertMutation.mutate({
-          table_id: data.id,
-          schema: JSON.stringify(table.schema),
-        });
       }
     },
     onError: () => {
@@ -72,7 +69,7 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   });
 
   const createMetadataColumnMutation = useMutation({
-    mutationKey: ["createColumn"],
+    mutationKey: ["createMetadataColumn"],
     mutationFn: (data: object) => createColumn(data),
     onError: () => {
       alert("Error creating metadata column.");
@@ -111,9 +108,16 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
           },
         ];
 
-        columnsData.map((column) =>
-          createMetadataColumnMutation.mutate(column)
-        );
+        Promise.all(
+          columnsData.map((column) =>
+            createMetadataColumnMutation.mutate(column)
+          )
+        ).then(() => {
+          insertMutation.mutate({
+            table_id: data.id,
+            schema: JSON.stringify(table.schema),
+          });
+        });
       }
     },
     onError: () => {
