@@ -108,16 +108,9 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
           },
         ];
 
-        Promise.all(
-          columnsData.map((column) =>
-            createMetadataColumnMutation.mutate(column)
-          )
-        ).then(() => {
-          insertMutation.mutate({
-            table_id: data.id,
-            schema: JSON.stringify(table.schema),
-          });
-        });
+        columnsData.map((column) =>
+          createMetadataColumnMutation.mutate(column)
+        );
       }
     },
     onError: () => {
