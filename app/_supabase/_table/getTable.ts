@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-export const getTable = async () => {
+export const getTable = async (table_id: number) => {
   try {
     const response = await axios({
       method: "get",
@@ -10,10 +10,10 @@ export const getTable = async () => {
       headers: {
         "Content-Type": "application/json",
       },
+      params: { id: table_id },
     });
-
     return response.data;
   } catch (error) {
-    console.error("Error creating table:", error);
+    console.error("Error getting table:", error);
   }
 };

@@ -29,7 +29,7 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   const updateTable = useMetadataStore((store) => store.updateTable);
   const resetTableData = useMetadataStore((store) => store.resetTable);
 
-  console.log("table: ", table);
+  console.log("table-zustand: ", table);
 
   const closeSidebar = () => {
     setOpen(false);
