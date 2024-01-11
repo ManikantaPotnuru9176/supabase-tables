@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-export const getListTables = async () => {
+export const getTable = async () => {
   try {
     const response = await axios({
       method: "get",

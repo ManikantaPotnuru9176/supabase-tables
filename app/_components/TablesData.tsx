@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getListTables } from "../_supabase/getListTables";
 
 const TablesData = () => {
   //   const getMetadata = useQuery({

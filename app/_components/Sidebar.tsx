@@ -5,10 +5,10 @@ import Image from "next/image";
 
 import useMetadataStore from "@/zustand/metadata";
 import { useMutation } from "@tanstack/react-query";
-import { createTable } from "@/supabase/createTable";
-import { createColumn } from "@/supabase/createColumn";
+import { createTable } from "@/app/_supabase/_table/createTable";
+import { createColumn } from "@/app/_supabase/_table/createColumn";
 import { typeConverter } from "@/utils/typeConverter";
-import { insertData } from "../_supabase/insert";
+import { insertData } from "../_supabase/_data/insert";
 
 interface ColumnMutationParams {
   tableId: number;
