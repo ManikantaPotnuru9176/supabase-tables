@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import TablesData from "./TablesData";
+import TablesList from "./TablesList";
 
 const Main = () => {
   const [open, setOpen] = useState(false);
@@ -13,13 +14,8 @@ const Main = () => {
 
   return (
     <div>
-      <button onClick={openSidebar}>Create Table</button>
-      <>
-        <p className="text-4xl font-black text-gray-900 dark:text-white">
-          Tables Data:
-        </p>
-        <TablesData />
-      </>
+      {/* <button onClick={openSidebar}>Create Table</button> */}
+      <TablesList />
       <Sidebar open={open} setOpen={setOpen} />
     </div>
   );
