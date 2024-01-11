@@ -86,72 +86,90 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
             mutationParams.isNullable = true;
           }
 
-          createColumnMutation.mutate(mutationParams);
-        });
-      }
-    },
-    onError: () => {
-      alert("Error creating table.");
-    },
-  });
-
-  const createMetadataColumnMutation = useMutation({
-    mutationFn: (data: object) => createColumn(data),
-    onError: () => {
-      alert("Error creating metadata column.");
-    },
-  });
-
-  const createMetadataTableMutation = useMutation({
-    mutationFn: (data: object) => createTable(data),
-    onSuccess: async (data: { data: object; id: number } | undefined) => {
-      if (data) {
-        const columnsData = [
-          {
-            tableId: data.id,
-            name: "id",
-            type: "int8",
-            isIdentity: true,
-            isUnique: true,
-            isPrimaryKey: true,
-          },
-          {
-            tableId: data.id,
-            name: "table_id",
-            type: typeConverter("integer"),
-            isIdentity: false,
-            isUnique: false,
-            isPrimaryKey: false,
-          },
-          {
-            tableId: data.id,
-            name: "schema",
-            type: typeConverter("string"),
-            isIdentity: false,
-            isUnique: false,
-            isPrimaryKey: false,
-          },
-        ];
-
-        columnsData.map((column) => {
-          createMetadataColumnMutation.mutate(column, {
-            onSuccess: async () => {
-              setTimeout(() => {
-                insertMutation.mutate({
+          createColumnMutation.mutate(mutationParams, {
+            onSuccess: () => {
+              insertMutation.mutate(
+                {
                   table_id: data.id,
                   schema: JSON.stringify(table.schema),
-                });
-                setIsLoading(false);
-              }, 1000);
+                },
+                {
+                  onSuccess: () => {
+                    setOpen(false);
+                    setIsLoading(false);
+                    resetTableData();
+                  },
+                }
+              );
             },
           });
         });
       }
     },
-    onError: () => {
-      alert("Error creating metadata table.");
+    onError: (error) => {
+      console.log("error: ", error);
+      setIsLoading(false);
+      alert("Error creating table.");
     },
   });
+
+  // const createMetadataColumnMutation = useMutation({
+  //   mutationFn: (data: object) => createColumn(data),
+  //   onError: () => {
+  //     alert("Error creating metadata column.");
+  //   },
+  // });
+
+  // const createMetadataTableMutation = useMutation({
+  //   mutationFn: (data: object) => createTable(data),
+  //   onSuccess: async (data: { data: object; id: number } | undefined) => {
+  //     if (data) {
+  //       const columnsData = [
+  //         {
+  //           tableId: data.id,
+  //           name: "id",
+  //           type: "int8",
+  //           isIdentity: true,
+  //           isUnique: true,
+  //           isPrimaryKey: true,
+  //         },
+  //         {
+  //           tableId: data.id,
+  //           name: "table_id",
+  //           type: typeConverter("integer"),
+  //           isIdentity: false,
+  //           isUnique: false,
+  //           isPrimaryKey: false,
+  //         },
+  //         {
+  //           tableId: data.id,
+  //           name: "schema",
+  //           type: typeConverter("string"),
+  //           isIdentity: false,
+  //           isUnique: false,
+  //           isPrimaryKey: false,
+  //         },
+  //       ];
+
+  //       columnsData.map((column) => {
+  //         createMetadataColumnMutation.mutate(column, {
+  //           onSuccess: async () => {
+  //             setTimeout(() => {
+  //               insertMutation.mutate({
+  //                 table_id: data.id,
+  //                 schema: JSON.stringify(table.schema),
+  //               });
+  //               setIsLoading(false);
+  //             }, 1000);
+  //           },
+  //         });
+  //       });
+  //     }
+  //   },
+  //   onError: () => {
+  //     alert("Error creating metadata table.");
+  //   },
+  // });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,12 +180,13 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
       comment: table.description,
       rls_enabled: false,
     });
-    createMetadataTableMutation.mutate({
-      name: "metadata",
-      schema: "public",
-      comment: "It is a metadata of the tables",
-      rls_enabled: false,
-    });
+
+    // createMetadataTableMutation.mutate({
+    //   name: "metadata",
+    //   schema: "public",
+    //   comment: "It is a metadata of the tables",
+    //   rls_enabled: false,
+    // });
   };
 
   return (
@@ -261,7 +280,7 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
                     cy="12"
                     r="10"
                     stroke="currentColor"
-                    stroke-width="4"
+                    strokeWidth="4"
                   ></circle>
                   <path
                     className="opacity-75"

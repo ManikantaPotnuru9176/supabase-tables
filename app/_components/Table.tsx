@@ -86,7 +86,7 @@ const Table = () => {
                         <option value="string">string</option>
                         <option value="boolean">boolean</option>
                         <option value="integer">integer</option>
-                        <option value="bigInterger">bigInterger</option>
+                        <option value="bigInteger">bigInteger</option>
                         <option value="rte">rte</option>
                         <option value="date">date</option>
                         <option value="timestamptz">timestamptz</option>

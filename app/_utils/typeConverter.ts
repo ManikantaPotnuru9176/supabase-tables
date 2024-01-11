@@ -10,7 +10,7 @@ export const typeConverter = (type: string): string => {
       return "varchar";
     case "date":
       return "date";
-    case "bigInterger":
+    case "biginteger":
       return "int8";
     case "timestamptz":
       return "timestamptz";
