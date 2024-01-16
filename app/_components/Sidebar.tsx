@@ -4,7 +4,7 @@ import Table from "./Table";
 import Image from "next/image";
 
 import useMetadataStore from "@/zustand/metadata";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { createTable } from "@/app/_supabase/_table/createTable";
 import { createColumn } from "@/app/_supabase/_table/createColumn";
 import { typeConverter } from "@/utils/typeConverter";
@@ -28,6 +28,8 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   const table = useMetadataStore((store) => store.table);
   const updateTable = useMetadataStore((store) => store.updateTable);
   const resetTableData = useMetadataStore((store) => store.resetTable);
+
+  const queryClient = new QueryClient();
 
   console.log("table-zustand: ", table);
 
@@ -95,6 +97,7 @@ const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
                 },
                 {
                   onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ["metadata"] });
                     setOpen(false);
                     setIsLoading(false);
                     resetTableData();

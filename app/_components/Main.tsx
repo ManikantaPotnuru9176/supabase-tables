@@ -15,7 +15,9 @@ const Main = () => {
   return (
     <div>
       {/* <button onClick={openSidebar}>Create Table</button> */}
-      <TablesList />
+      <div className={`${open ? "blur-sm" : ""}`}>
+        <TablesList openSidebar={openSidebar} />
+      </div>
       <Sidebar open={open} setOpen={setOpen} />
     </div>
   );

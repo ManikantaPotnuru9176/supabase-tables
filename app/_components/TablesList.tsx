@@ -3,8 +3,11 @@ import TablesData from "./TablesData";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { getData } from "@/supabase/_data/get";
 import { getTable } from "@/supabase/_table/getTable";
+import { useParams, useSearchParams } from "next/navigation";
 
-const TablesList = () => {
+const TablesList = ({ openSidebar }: { openSidebar: Function }) => {
+  const serachParams = useSearchParams();
+
   const { data: metadata, isLoading }: { data: any; isLoading: boolean } =
     useQuery({
       queryKey: ["metadata"],
@@ -21,6 +24,12 @@ const TablesList = () => {
         })
       : [],
   }).map((query) => query.data);
+
+  const { data }: { data: any } = useQuery({
+    queryKey: ["metadata", serachParams.get("tableId")],
+    queryFn: () => getData(serachParams.get("tableName") ?? "", "*", "id"),
+    enabled: !!serachParams.get("tableName"),
+  });
 
   console.log("Metadata: ", metadata);
   console.log("tableQueries: ", tableQueries);
@@ -47,11 +56,15 @@ const TablesList = () => {
         </aside>
 
         <div className="sm:ml-64 dark:bg-gray-800 overflow-x-auto min-h-screen">
-          <TablesData />
+          <TablesData data={[]} tableColumnsData={[]} />
         </div>
       </div>
     );
   }
+
+  const tableColumnsData = tableQueries.filter(
+    (table: any) => table?.name === serachParams.get("tableName")
+  );
 
   return (
     <div>
@@ -62,7 +75,10 @@ const TablesList = () => {
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 border-r-2">
           <div className="w-full pb-5">
-            <span className="text-sm font-medium me-2 px-16 py-1.5 rounded bg-gray-700 text-gray-300">
+            <span
+              className="text-sm font-medium me-2 px-14 py-1.5 rounded bg-gray-700 text-gray-300 cursor-pointer"
+              onClick={() => openSidebar()}
+            >
               <i className="bi bi-pencil-square mr-3"></i>
               New table
             </span>
@@ -73,12 +89,12 @@ const TablesList = () => {
               ({tableQueries?.length}):
             </span>
           </span>
-          <ul className="space-y-2 font-medium">
+          <ul className="font-medium">
             {tableQueries?.map((table: any) => {
               return (
                 <li key={table?.id}>
                   <a
-                    href="#"
+                    href={`?tableId=${table?.id}&tableName=${table?.name}`}
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   >
                     <i className="bi bi-table"></i>
@@ -92,7 +108,7 @@ const TablesList = () => {
       </aside>
 
       <div className="sm:ml-64 dark:bg-gray-800 overflow-x-auto min-h-screen">
-        <TablesData />
+        <TablesData data={data} tableColumnsData={tableColumnsData} />
       </div>
     </div>
   );
